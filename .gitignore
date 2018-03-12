@@ -33,3 +33,6 @@ tags
 libssh2.pc
 TAGS
 *~
+bin
+bin32
+bin64
