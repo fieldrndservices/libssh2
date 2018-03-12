@@ -505,6 +505,18 @@ libssh2_session_init_ex(LIBSSH2_ALLOC_FUNC((*my_alloc)),
 }
 
 /*
+ * libssh2_session_init
+ *
+ * The replacement function for the convenience macro. It is using the
+ * underlying function libssh2_session_init_ex.
+ */
+LIBSSH2_API LIBSSH2_SESSION *
+libssh2_session_init()
+{
+    return libssh2_session_init_ex(NULL, NULL, NULL, NULL);
+}
+
+/*
  * libssh2_session_callback_set
  *
  * Set (or reset) a callback function
