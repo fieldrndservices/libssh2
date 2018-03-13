@@ -11,6 +11,7 @@ cmake --build bin64 --config Release
 pushd bin32
 pushd src
 pushd Release
+if exist "labssh2.dll" del "labssh2.dll"
 ren libssh2.dll labssh2.dll
 popd
 popd
@@ -18,6 +19,7 @@ popd
 pushd bin64
 pushd src
 pushd Release
+if exist "labssh2-x64.dll" del "labssh2-x64.dll"
 ren libssh2.dll labssh2-x64.dll
 popd
 popd
