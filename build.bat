@@ -1,7 +1,9 @@
-mkdir bin32 & pushd bin32
+if not exist "bin32\" mkdir bin32 
+pushd bin32
 cmake .. -DBUILD_SHARED_LIBS=ON
 popd
-mkdir bin64 & pushd bin64
+if not exist "bin64\" mkdir bin64 
+pushd bin64
 cmake -G "Visual Studio 15 2017 Win64" .. -DBUILD_SHARED_LIBS=ON
 popd
 cmake --build bin32 --config Release

@@ -1162,6 +1162,12 @@ libssh2_session_disconnect_ex(LIBSSH2_SESSION *session, int reason,
     return rc;
 }
 
+LIBSSH2_API int
+libssh2_session_disconnect(LIBSSH2_SESSION *session, const char *description)
+{
+    return libssh2_session_disconnect_ex(session, SSH_DISCONNECT_BY_APPLICATION, description, "");
+}
+
 /* libssh2_session_methods
  *
  * Return the currently active methods for method_type

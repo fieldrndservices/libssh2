@@ -558,9 +558,8 @@ LIBSSH2_API int libssh2_session_disconnect_ex(LIBSSH2_SESSION *session,
                                               int reason,
                                               const char *description,
                                               const char *lang);
-#define libssh2_session_disconnect(session, description) \
-  libssh2_session_disconnect_ex((session), SSH_DISCONNECT_BY_APPLICATION, \
-                                (description), "")
+LIBSSH2_API int
+libssh2_session_disconnect(LIBSSH2_SESSION *session, const char *description);
 
 LIBSSH2_API int libssh2_session_free(LIBSSH2_SESSION *session);
 
