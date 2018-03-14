@@ -1,6 +1,6 @@
-# labssh2-c - A LabVIEW-friendly libssh2 fork
+# LabSSH2-C - A LabVIEW-friendly fork of the libssh2 C library
 
-labssh2-c is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). 
+LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). 
 
 [![GitHub release](https://img.shields.io/github/release/fieldrndservices/labssh2-c.svg)](https://github.com/fieldrndservices/labssh2-c/releases)
 [![license](https://img.shields.io/github/license/fieldrndservices/labssh2-c.svg)](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE)
