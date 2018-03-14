@@ -13,10 +13,6 @@ Note, the build output of this project/fork is renamed from `libssh2` to `labssh
 
 ## Build
 
-Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is needed. The `labssh2` shared library is statically linked with the OpenSSL static libraries, `libcrypto` and `libssl`, to minimize dependencies during distribution for LabVIEW developers. This means that static libraries for OpenSSL must be present on the machine/platform/environment used to build the `labssh2` library.
-
-**Note**, if the OpenSSL shared libraries are present, then the labssh2/libssh2 [Cmake](https://cmake.org) build system will be dynamically link instead of statically link to OpenSSL. The `OPENSSL_USE_STATIC_LIBS` option of the [FindOpenSSL](https://cmake.org/cmake/help/latest/module/FindOpenSSL.html) cmake module does not appear to work on Windows. This means that the OpenSSL shared libraries become a dependency and need to be present on the deployed system/machine/environment prior to using the labssh2 shared library; however, this does result in a smaller labssh2 shared library. 
-
 Ensure all of the following dependencies are installed before proceeding:
 
 - [CMake 3.10.x](https://cmake.org/), or newer
@@ -25,6 +21,23 @@ Ensure all of the following dependencies are installed before proceeding:
 - [Git](https://git-scm.com/)
 - [C/C++ Development Tools for NI Linux Real-Time, Eclipse Edition 2017](http://www.ni.com/download/labview-real-time-module-2017/6731/en/), NI Linux RT only
 - [OpenSSL v1.1.0g](http://www.openssl.org), static libraries only
+- [ActivePerl](https://www.activestate.com/activeperl), Only if building the OpenSSL static Windows libraries
+
+Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is needed. The `labssh2` shared library is statically linked with the OpenSSL static libraries, `libcrypto` and `libssl`, to minimize dependencies during distribution for LabVIEW developers. This means that static libraries for OpenSSL must be present on the machine/platform/environment used to build the `labssh2` library.
+
+**Note**, if the OpenSSL shared libraries are present, then the labssh2/libssh2 [Cmake](https://cmake.org) build system will be dynamically link instead of statically link to OpenSSL. The `OPENSSL_USE_STATIC_LIBS` option of the [FindOpenSSL](https://cmake.org/cmake/help/latest/module/FindOpenSSL.html) cmake module does not appear to work on Windows. This means that the OpenSSL shared libraries become a dependency and need to be present on the deployed system/machine/environment prior to using the labssh2 shared library; however, this does result in a smaller labssh2 shared library. The build dependencies for OpenSSL are the same as this project except Perl is needed instead of Cmake. On Windows, use the following commands to build and install OpenSSL in a way that works with statically linking with this project for 32-bit and 64-bit versions, respectively:
+
+```dos
+> perl Configure VC-WIN32 no-asm no-shared no-stdio
+> nmake
+> nmake install
+```
+
+```
+> perl Configure VC-WIN64A no-asm no-shared no-stdio
+> nmake
+> nmake install
+```
 
 ### Windows
 
