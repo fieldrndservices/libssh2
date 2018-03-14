@@ -53,6 +53,5 @@ Then, running the following commands based on building a 32-bit or 64-bit versio
 
 ## License
 
-The labssh2 project is licensed under the [MIT](https://opensource.org/licenses/MIT). See the [LICENSE](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE) file for more information about licensing and copyright. This project includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org).
-
+The labssh2 project is licensed under the [MIT](https://opensource.org/licenses/MIT). See the [LICENSE](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE) and [COPYING](https://github.com/fieldrndservices/labssh2-c/blob/master/COPYING) file for more information about licensing and copyright. This project includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org).
 
