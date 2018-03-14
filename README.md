@@ -2,9 +2,6 @@
 
 LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). 
 
-[![GitHub release](https://img.shields.io/github/release/fieldrndservices/labssh2-c.svg)](https://github.com/fieldrndservices/labssh2-c/releases)
-[![license](https://img.shields.io/github/license/fieldrndservices/labssh2-c.svg)](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE)
-
 ## History
 
 LabVIEW provides the ability to interface with shared libraries (.dll, .so, and .dylib) that implement a C ABI through the [Call Library Function](http://zone.ni.com/reference/en-XX/help/371361P-01/glang/call_library_function/) node. However, the `Call Library Function` node is relatively limited, specifically when it comes to strings and pointers. The limitation that affects using the `libssh2` library without modification is lack of support for passing a `NULL` value as a parameter and function pointers, i.e. callbacks. The problem is that the `libssh2` has a number of `*_ex` functions in its public API that can take `NULL` to indicate using a built-in or default configuration. There are a number of convenience macro functions that wrap the various `*_ex` functions and pass `NULL` as needed. It would be possible to just use the convenience functions, but macro functions are not included shared libraries, as these are defined in header files and evaluated during compile-time. Thus, this library converts the macro functions to "real" functions to avoid the `NULL` argument limitation with LabVIEW's `Call Library Function` node.
