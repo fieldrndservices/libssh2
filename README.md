@@ -23,6 +23,8 @@ Ensure all of the following dependencies are installed before proceeding:
 - [OpenSSL v1.1.0g](http://www.openssl.org), static libraries only
 - [ActivePerl](https://www.activestate.com/activeperl), Only if building the OpenSSL static Windows libraries
 
+### OpenSSL
+
 Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is needed. The `labssh2` shared library is statically linked with the OpenSSL static libraries, `libcrypto` and `libssl`, to minimize dependencies during distribution for LabVIEW developers. This means that static libraries for OpenSSL must be present on the machine/platform/environment used to build the `labssh2` library.
 
 **Note**, if the OpenSSL shared libraries are present, then the labssh2/libssh2 [Cmake](https://cmake.org) build system will be dynamically link instead of statically link to OpenSSL. The `OPENSSL_USE_STATIC_LIBS` option of the [FindOpenSSL](https://cmake.org/cmake/help/latest/module/FindOpenSSL.html) cmake module does not appear to work on Windows. This means that the OpenSSL shared libraries become a dependency and need to be present on the deployed system/machine/environment prior to using the labssh2 shared library; however, this does result in a smaller labssh2 shared library. The build dependencies for OpenSSL are the same as this project except Perl is needed instead of Cmake. On Windows, use the following commands to build and install OpenSSL in a way that works with statically linking with this project for 32-bit and 64-bit versions, respectively:
@@ -39,6 +41,10 @@ Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is
 > nmake install
 ```
 
+The `no-asm` avoids having to install an assembler. The `no-shared` option disables building the OpenSSL into shared/dynamic libraries and ensures OpenSSL is statically linked with this project. The `no-stdio` skips building the tests and application, which can increase the build time considerably and are ultimately unnecessary.
+
+The `nmake install` command will "install" the static libraries into `C:\Program Files (x86)\OpenSSL` and `C:\Program Files\OpenSSL`, respectively. This step/command can be skipped to avoid overwriting an existing OpenSSL installation, which may be a different version and/or include the shared libraries, but then the `-DOPENSSL_ROOT_DIR=` option used during the [Windows build](#windows) of this project will have to be adjusted accordingly.
+
 ### Windows
 
 The [Microsoft Visual C++ Build Tools 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017) should have installed the `x86 Native Build Tools` and the `x64 Native Build Tools` command prompts. Use the `x86` command prompt for building the 32-bit versions of the DLL, and the `x64` command prompt for building the 64-bit version of the DLL. This ensures the appropriate C compiler is available to CMake to build the library. Run the following commands to obtain the source code:
@@ -48,7 +54,7 @@ The [Microsoft Visual C++ Build Tools 2017](https://www.visualstudio.com/downloa
 > cd LabSSH2-C
 ```
 
-Then, running the following commands based on building a 32-bit or 64-bit version of the DLL.
+Then, running the following commands based on building a 32-bit or 64-bit version of the DLL. The `-DBUILD_TESTING=OFF` skips building the tests, which need the older `libeay` and `ssleay` shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building.
 
 #### 32-bit
 
