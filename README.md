@@ -1,12 +1,29 @@
 # LabSSH2-C - A LabVIEW-friendly fork of the libssh2 C library
 
-LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). 
+LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). This provides SSH client functionality to LabVIEW as a Dynamic Link Library (DLL, Windows), Dynamic Library (Dylib, macOS), and/or Shared Object (SO, Linux).
+
+[History](#history) | [Installation](#installation) | [Build](#build) | [API](https://fieldrndservices.github.io/labpack-c/) | [Tests](#tests) | [License](#license)
 
 ## History
 
 LabVIEW provides the ability to interface with shared libraries (.dll, .so, and .dylib) that implement a C ABI through the [Call Library Function](http://zone.ni.com/reference/en-XX/help/371361P-01/glang/call_library_function/) node. However, the `Call Library Function` node is relatively limited, specifically when it comes to strings and pointers. The limitation that affects using the `libssh2` library without modification is lack of support for passing a `NULL` value as a parameter and function pointers, i.e. callbacks. The problem is that the `libssh2` has a number of `*_ex` functions in its public API that can take `NULL` to indicate using a built-in or default configuration. There are a number of convenience macro functions that wrap the various `*_ex` functions and pass `NULL` as needed. It would be possible to just use the convenience functions, but macro functions are not included shared libraries, as these are defined in header files and evaluated during compile-time. Thus, this library converts the macro functions to "real" functions to avoid the `NULL` argument limitation with LabVIEW's `Call Library Function` node.
 
 Note, the build output of this project/fork is renamed from `libssh2` to `labssh2` to avoid overwritten or name collision with existing installations of `libssh2` on many platforms and to indicate the output is related to usage with LabVIEW. Field R&D Services does _not_ claim any ownership, copyright, or trademark over the [libssh2](http://www.libssh2.org) project and its properties.
+
+## Installation
+
+A single ZIP archive containing the pre-compiled/built shared libraries for all of the platforms listed in the [Build](#build) section is provided with each [release](https://github.com/fieldrndservices/labssh2-c/releases). These pre-compiled/built shared libraries includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org).
+
+1. Download the ZIP archive for the latest release. Note, this is _not_ the source code ZIP file. The ZIP archive containing the pre-compiled/built shared libraries will be labeled: `labssh2-c_#.#.#.zip`, where `#.#.#` is the version number for the release.
+2. Extract, or unzip, the ZIP archive.
+3. Copy and paste all or the platform-specific shared libraries to one of the following locations on disk:
+
+| Platform    | Destination           |
+|-------------|-----------------------|
+| Windows     | `C:\Windows\System32` |
+| macOS       | `/usr/local/lib`      |
+| Linux       | `/usr/local/lib`      |
+| NI Linux RT | `/usr/local/lib`      |
 
 ## Build
 
@@ -75,5 +92,4 @@ Then, running the following commands based on building a 32-bit or 64-bit versio
 
 ## License
 
-The labssh2 project is licensed under the [revised BSD](https://opensource.org/licenses/BSD-3-Clause). See the [LICENSE](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE) and [COPYING](https://github.com/fieldrndservices/labssh2-c/blob/master/COPYING) file for more information about licensing and copyright. This project includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org).
-
+The labssh2 project is licensed under the [revised BSD](https://opensource.org/licenses/BSD-3-Clause). See the [LICENSE](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE) and [COPYING](https://github.com/fieldrndservices/labssh2-c/blob/master/COPYING) file for more information about licensing and copyright. 
