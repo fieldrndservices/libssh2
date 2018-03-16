@@ -24,6 +24,7 @@ ltmain.sh
 missing
 ssh2_sample
 libssh2-*.tar.gz
+labssh2-*.tar.gz
 install-sh
 *.o
 *.lo
@@ -36,3 +37,6 @@ TAGS
 bin
 bin32
 bin64
+build
+build32
+build64

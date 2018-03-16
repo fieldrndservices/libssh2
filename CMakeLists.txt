@@ -37,9 +37,9 @@ cmake_minimum_required(VERSION 2.8.11)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-project(libssh2 C)
-set(PROJECT_URL "https://www.libssh2.org/")
-set(PROJECT_DESCRIPTION "The SSH library")
+project(labssh2 C)
+set(PROJECT_URL "https://github.com/fieldrndservices/labssh2-c")
+set(PROJECT_DESCRIPTION "A fork of the libssh2 library with modifications for interfacing with LabVIEW")
 
 if (CMAKE_VERSION VERSION_LESS "3.1")
   if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
