@@ -92,4 +92,4 @@ Then, running the following commands based on building a 32-bit or 64-bit versio
 
 ## License
 
-The labssh2 project is licensed under the [revised BSD](https://opensource.org/licenses/BSD-3-Clause). See the [LICENSE](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE) and [COPYING](https://github.com/fieldrndservices/labssh2-c/blob/master/COPYING) file for more information about licensing and copyright. 
+The labssh2 project is licensed under the [revised BSD 3-Clause](https://opensource.org/licenses/BSD-3-Clause) license. See the [LICENSE](https://github.com/fieldrndservices/labssh2-c/blob/master/LICENSE) and [COPYING](https://github.com/fieldrndservices/labssh2-c/blob/master/COPYING) file for more information about licensing and copyright. 
