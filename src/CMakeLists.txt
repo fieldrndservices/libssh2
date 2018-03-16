@@ -367,7 +367,7 @@ endif()
 install(FILES
     ${PROJECT_SOURCE_DIR}/include/libssh2.h
     ${PROJECT_SOURCE_DIR}/include/libssh2_publickey.h
-    ${PROJECT_SOURCE_DIR}/include/libssh2_NAME}_sftp.h
+    ${PROJECT_SOURCE_DIR}/include/libssh2_sftp.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(TARGETS ${PROJECT_NAME}
