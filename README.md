@@ -111,7 +111,7 @@ $ cmake -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TES
 $ cmake --build . --config Release
 ```
 
-Once completed, the dynamic library (`labssh2.dylib`) will be available in the `build/src/Release` directory.
+Once completed, the dynamic library (`labssh2.dylib`) will be available in the `build/src` directory.
 
 ## License
 
