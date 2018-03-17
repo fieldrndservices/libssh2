@@ -1,4 +1,5 @@
 # Copyright (c) 2014, 2015  Alexander Lamaison <alexander.lamaison@gmail.com>
+# Copyright (c) 2018 Field R&D Services, LLC <info@fieldrndservices.com>
 #
 # Redistribution and use in source and binary forms,
 # with or without modification, are permitted provided
@@ -98,7 +99,10 @@ if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
 
-add_subdirectory(docs)
+option(BUILD_DOCS "Build libssh2 documentation" ON)
+if(BUILD_DOCS)
+  add_subdirectory(docs)
+endif()
 
 feature_summary(WHAT ALL)
 
