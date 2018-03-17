@@ -77,7 +77,7 @@ Then, running the following commands based on building a 32-bit or 64-bit versio
 #### 32-bit
 
 ```dos
-> cmake -G"Visual Studio 15 2017" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
+> cmake -G"Visual Studio 15 2017" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
 > cmake --build . --config Release
 > cd src
 > cd Release
@@ -87,12 +87,31 @@ Then, running the following commands based on building a 32-bit or 64-bit versio
 #### 64-bit
 
 ```dos
-> cmake -G"Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
+> cmake -G"Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
 > cmake --build . --config Release
 > cd src
 > cd Release
 > ren libssh2.ddl labssh2-x64.dll
 ```
+
+### macOS
+
+The [XCode Command Line Tooles](https://developer.apple.com/xcode/features/) must be installed before proceeding with building the dynamic library (`labssh2.dylib`) on macOS. Start a terminal, such as Terminal.app, and run the following commands to obtain the source code:
+
+```bash
+$ git clone https://github.com/fieldrndservices/labssh2-c.git LabSSH2-C && cd $_
+```
+
+Then, run the following commands from the terminal after obtaining the source code:
+
+```bash
+$ mkdir build
+$ cd build
+$ cmake -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ..
+$ cmake --build . --config Release
+```
+
+Once completed, the dynamic library (`labssh2.dylib`) will be available in the `build/src/Release` directory.
 
 ## License
 
