@@ -409,9 +409,7 @@ install(
 
 ## Versioning
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  SOVERSION 1
-  VERSION 1.0.1)
+#set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 1 VERSION 1.0.1)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
