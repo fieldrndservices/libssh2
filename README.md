@@ -1,12 +1,12 @@
 # LabSSH2-C - A LabVIEW-friendly fork of the libssh2 C library
 
-LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). This provides SSH client functionality to LabVIEW as a Dynamic Link Library (DLL, Windows), Dynamic Library (Dylib, macOS), and/or Shared Object (SO, Linux).
+LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that includes modifications to support interfacing with the [LabVIEW&trade;](http://www.ni.com/labview) graphical programming language developed and distributed by [National Instruments](http://www.ni.com). This provides SSH client functionality to LabVIEW as a <abbr title="Dynamic Link Library">DLL</abbr> (Windows), <abbr title="Dynamic Library">Dylib</abbr> (macOS), and/or <abbr title="Shared Object">SO</abbr> (Linux).
 
 [History](#history) | [Installation](#installation) | [Build](#build) | [API](https://fieldrndservices.github.io/labpack-c/) | [Tests](#tests) | [License](#license)
 
 ## History
 
-LabVIEW provides the ability to interface with shared libraries (.dll, .so, and .dylib) that implement a C ABI through the [Call Library Function](http://zone.ni.com/reference/en-XX/help/371361P-01/glang/call_library_function/) node. However, the `Call Library Function` node is relatively limited, specifically when it comes to strings and pointers. Ballpark, 90% of the libssh2 functions work with LabVIEW without modification, so it made sense to fork and just add the needed modifications for the other 10% of the libssh2 API.
+LabVIEW provides the ability to interface with shared libraries (DLL, Dylib, and/or SO) that implement a C <abbr title="Application Binary Interface">ABI</abbr> through the [Call Library Function](http://zone.ni.com/reference/en-XX/help/371361P-01/glang/call_library_function/) node. However, the `Call Library Function` node is relatively limited, specifically when it comes to strings and pointers. Ballpark, 90% of the libssh2 functions work with LabVIEW without modification, so it made sense to fork and just add the needed modifications for the other 10% of the libssh2 <abbr title="Application Programming Interface">API</abbr>.
 
 One limitation that affects using the `libssh2` library without modification is lack of support for passing a `NULL` value. The `libssh2` library has a number of `*_ex` functions in its public API that can take `NULL` to indicate using a built-in, or default, configuration. There are a number of convenience macro functions that wrap the various `*_ex` functions and pass `NULL` as needed. It would be possible to just use the convenience functions, but macro functions are not included shared libraries, as these are defined in header files and evaluated during compile-time. Thus, this library converts the macro functions to "real" functions to avoid the `NULL` argument limitation with LabVIEW's `Call Library Function` node.
 
@@ -29,6 +29,8 @@ A single ZIP archive containing the pre-compiled/built shared libraries for all 
 | Linux       | `/usr/local/lib`      |
 | NI Linux RT | `/usr/local/lib`      |
 
+The shared libraries can be "installed" in custom location different from that listed in the above table, but then the absolute path to the library must be passed to the <abbr title="Virtual Instrument">VIs</abbr> in the LabSSH2-LabVIEW package.
+
 ## Build
 
 Ensure all of the following dependencies are installed before proceeding:
@@ -45,7 +47,9 @@ Ensure all of the following dependencies are installed before proceeding:
 
 Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is needed. The `labssh2` shared library is statically linked with the OpenSSL static libraries, `libcrypto` and `libssl`, to minimize dependencies during distribution for LabVIEW developers. This means that static libraries for OpenSSL must be present on the machine/platform/environment used to build the `labssh2` library.
 
-**Note**, if the OpenSSL shared libraries are present, then the labssh2/libssh2 [Cmake](https://cmake.org) build system will be dynamically link instead of statically link to OpenSSL. The `OPENSSL_USE_STATIC_LIBS` option of the [FindOpenSSL](https://cmake.org/cmake/help/latest/module/FindOpenSSL.html) cmake module does not appear to work on Windows. This means that the OpenSSL shared libraries become a dependency and need to be present on the deployed system/machine/environment prior to using the labssh2 shared library; however, this does result in a smaller labssh2 shared library. The build dependencies for OpenSSL are the same as this project except Perl is needed instead of Cmake. On Windows, use the following commands to build and install OpenSSL in a way that works with statically linking with this project for 32-bit and 64-bit versions, respectively:
+The OpenSSL v1.1.0g library is used instead of platform specific libraries, such as WinCNG, because at the time of the fork, the OpenSSL library implemented all of the modern algorithms supported by the majority of SSH server implementations, whereas WinCNG support in the libssh2 v1.8.0 library did not have support for modern algorithms, which would result in `LIBSSH2_ERROR_KEX_FAILURE` errors during the SSH handshake. A patch that added support to libssh2 for more modern algorithms had been merged, but not formally released. Using the OpenSSL library as a dependency adds some consistency but does increase the file size and build times.
+
+**Note**, if the OpenSSL shared libraries are present, then the labssh2/libssh2 [Cmake](https://cmake.org) build system will be dynamically linked instead of statically linked to OpenSSL. The `OPENSSL_USE_STATIC_LIBS` option of the [FindOpenSSL](https://cmake.org/cmake/help/latest/module/FindOpenSSL.html) CMake module does not appear to work on Windows. This means that the OpenSSL shared libraries becomes a dependency and needs to be present on the deployed system/machine/environment prior to using the labssh2 shared library; however, this does result in a smaller labssh2 shared library. The build dependencies for OpenSSL are the same as this project except Perl is needed instead of CMake. On Windows, use the following commands to build and install OpenSSL in a way that works with statically linking with this project for 32-bit and 64-bit versions, respectively:
 
 ```dos
 > perl Configure VC-WIN32 no-asm no-shared no-stdio
@@ -65,23 +69,18 @@ The `nmake install` command will "install" the static libraries into `C:\Program
 
 ### Windows
 
-The [Microsoft Visual C++ Build Tools 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017) should have installed the `x86 Native Build Tools` and the `x64 Native Build Tools` command prompts. Use the `x86` command prompt for building the 32-bit versions of the DLL, and the `x64` command prompt for building the 64-bit version of the DLL. This ensures the appropriate C compiler is available to CMake to build the library. Run the following commands to obtain the source code:
+The [Microsoft Visual C++ Build Tools 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017) should have installed the `x86 Native Build Tools` and the `x64 Native Build Tools` command prompts. Use the x86 command prompt for building the 32-bit versions of the DLL, and the x64 command prompt for building the 64-bit version of the DLL. This ensures the appropriate C compiler is available to CMake to build the library. Run the following commands to obtain the source code:
 
 ```dos
 > git clone https://github.com/fieldrndservices/labssh2-c.git LabSSH2-C
 > cd LabSSH2-C
 ```
 
-Then, running the following commands based on building a 32-bit or 64-bit version of the DLL. The `-DBUILD_TESTING=OFF` skips building the tests, which need the older `libeay` and `ssleay` shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building.
-
-#### 32-bit
+Then, run the following commands based on building a 32-bit or 64-bit version of the DLL. #### 32-bit
 
 ```dos
 > cmake -G"Visual Studio 15 2017" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
 > cmake --build . --config Release
-> cd src
-> cd Release
-> ren libssh2.dll labssh2.dll
 ```
 
 #### 64-bit
@@ -91,12 +90,14 @@ Then, running the following commands based on building a 32-bit or 64-bit versio
 > cmake --build . --config Release
 > cd src
 > cd Release
-> ren libssh2.ddl labssh2-x64.dll
+> ren labssh2.ddl labssh2-x64.dll
 ```
+
+The `-DBUILD_TESTING=OFF` skips building the tests, which need the older `libeay` and `ssleay` shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building. The DLL will be available in the `build\src\Release` folder.
 
 ### macOS
 
-The [XCode Command Line Tooles](https://developer.apple.com/xcode/features/) must be installed before proceeding with building the dynamic library (`labssh2.dylib`) on macOS. Start a terminal, such as Terminal.app, and run the following commands to obtain the source code:
+The [XCode Command Line Tools](https://developer.apple.com/xcode/features/) must be installed before proceeding with building the dynamic library (`labssh2.dylib`) on macOS. Start a terminal, such as Terminal.app, and run the following commands to obtain the source code:
 
 ```bash
 $ git clone https://github.com/fieldrndservices/labssh2-c.git LabSSH2-C && cd $_
