@@ -8,11 +8,11 @@ LabSSH2-C is a fork of the [libssh2](https://www.libssh2.org) project that inclu
 
 LabVIEW provides the ability to interface with shared libraries (DLL, Dylib, and/or SO) that implement a C <abbr title="Application Binary Interface">ABI</abbr> through the [Call Library Function](http://zone.ni.com/reference/en-XX/help/371361P-01/glang/call_library_function/) node. However, the `Call Library Function` node is relatively limited, specifically when it comes to strings and pointers. Ballpark, 90% of the libssh2 functions work with LabVIEW without modification, so it made sense to fork and just add the needed modifications for the other 10% of the libssh2 <abbr title="Application Programming Interface">API</abbr>.
 
-One limitation that affects using the `libssh2` library without modification is lack of support for passing a `NULL` value. The `libssh2` library has a number of `*_ex` functions in its public API that can take `NULL` to indicate using a built-in, or default, configuration. There are a number of convenience macro functions that wrap the various `*_ex` functions and pass `NULL` as needed. It would be possible to just use the convenience functions, but macro functions are not included shared libraries, as these are defined in header files and evaluated during compile-time. Thus, this library converts the macro functions to "real" functions to avoid the `NULL` argument limitation with LabVIEW's `Call Library Function` node.
+One limitation that affects using the libssh2 library without modification is lack of support for passing a `NULL` value. The libssh2 library has a number of `*_ex` functions in its public API that can take `NULL` to indicate using a built-in, or default, configuration. There are a number of convenience macro functions that wrap the various `*_ex` functions and pass `NULL` as needed. It would be possible to just use the convenience functions, but macro functions are not included shared libraries, as these are defined in header files and evaluated during compile-time. Thus, this library converts the macro functions to "real" functions to avoid the `NULL` argument limitation with LabVIEW's `Call Library Function` node.
 
 Another limitation is returning pointers from functions. The `libssh2_hostkey_hash` function returns a `const char*`, which is a "string" that contains the digest, or fingerprint, of the host's public key. The return value is in fact _not_ a C string, but a byte array, which can contain NUL, `\0`, characters within the body of the "string". The `Call Library Function` node can handle a function returning a string, but it terminates the output on the first NUL, `\0`, character since it believes a `const char*` pointer is to a C string (NUL-terminated byte array). Thus, the fingerprint maybe clipped in LabVIEW. The solution is to add a function, `libssh2_hostkey_fingerprint` that takes a buffer (`uint8_t*`) as a parameter and copies the value returned by the `libssh2_hostkey_hash` function into the buffer.
 
-Note, the build output of this project/fork is renamed from `libssh2` to `labssh2` to avoid overwriting or name collision with existing installations of `libssh2` and to indicate the output is related to usage with LabVIEW. Field R&D Services does _not_ claim any ownership, copyright, or trademark over the [libssh2](http://www.libssh2.org) project and its properties.
+Note, the build output of this project/fork is renamed from "libssh2" to "labssh2" to avoid overwriting or name collision with existing installations of libssh2 and to indicate the output is related to usage with LabVIEW. Field R&D Services does _not_ claim any ownership, copyright, or trademark over the [libssh2](http://www.libssh2.org) project and its properties.
 
 ## Installation
 
@@ -45,7 +45,7 @@ Ensure all of the following dependencies are installed before proceeding:
 
 ### OpenSSL
 
-Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is needed. The `labssh2` shared library is statically linked with the OpenSSL static libraries, `libcrypto` and `libssl`, to minimize dependencies during distribution for LabVIEW developers. This means that static libraries for OpenSSL must be present on the machine/platform/environment used to build the `labssh2` library.
+Regardless of platform, the [OpenSSL v1.1.0g](http://www.openssl.org) library is needed. The labssh2 shared library is statically linked with the OpenSSL static libraries, libcrypto and libssl, to minimize dependencies during distribution for LabVIEW developers. This means that static libraries for OpenSSL must be present on the machine/platform/environment used to build the labssh2 library.
 
 The OpenSSL v1.1.0g library is used instead of platform specific libraries, such as WinCNG, because at the time of the fork, the OpenSSL library implemented all of the modern algorithms supported by the majority of SSH server implementations, whereas WinCNG support in the libssh2 v1.8.0 library did not have support for modern algorithms, which would result in `LIBSSH2_ERROR_KEX_FAILURE` errors during the SSH handshake. A patch that added support to libssh2 for more modern algorithms had been merged, but not formally released. Using the OpenSSL library as a dependency adds some consistency but does increase the file size and build times.
 
@@ -93,11 +93,11 @@ Then, run the following commands based on building a 32-bit or 64-bit version of
 > ren labssh2.ddl labssh2-x64.dll
 ```
 
-The `-DBUILD_TESTING=OFF` skips building the tests, which need the older `libeay` and `ssleay` shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building. The DLL will be available in the `build\src\Release` folder.
+The `-DBUILD_TESTING=OFF` skips building the tests, which need the older libeay and ssleay shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building. The DLL will be available in the `build\src\Release` folder.
 
 ### macOS
 
-The [XCode Command Line Tools](https://developer.apple.com/xcode/features/) must be installed before proceeding with building the dynamic library (`labssh2.dylib`) on macOS. Start a terminal, such as Terminal.app, and run the following commands to obtain the source code:
+The [XCode Command Line Tools](https://developer.apple.com/xcode/features/) must be installed before proceeding with building the dynamic library (labssh2.dylib) on macOS. Start a terminal, such as Terminal.app, and run the following commands to obtain the source code:
 
 ```bash
 $ git clone https://github.com/fieldrndservices/labssh2-c.git LabSSH2-C && cd $_
@@ -112,7 +112,7 @@ $ cmake -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TES
 $ cmake --build . --config Release
 ```
 
-Once completed, the dynamic library (`labssh2.dylib`) will be available in the `build/src` directory.
+Once completed, the dynamic library (labssh2.dylib) will be available in the `build/src` directory.
 
 ## License
 
