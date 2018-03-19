@@ -211,12 +211,12 @@ if(WIN32)
     list(APPEND SOURCES ${PROJECT_SOURCE_DIR}/win32/libssh2.rc)
 endif()
 
-add_library(${PROJECT_NAME} ${SOURCES})
+add_library(libssh2 ${SOURCES})
 # we want it to be called libssh2 on all platforms
-set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
+set_target_properties(libssh2 PROPERTIES PREFIX "" OUTPUT_NAME labssh2)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE ${PRIVATE_COMPILE_DEFINITIONS})
-target_include_directories(${PROJECT_NAME}
+target_compile_definitions(libssh2 PRIVATE ${PRIVATE_COMPILE_DEFINITIONS})
+target_include_directories(libssh2
   PRIVATE ${PRIVATE_INCLUDE_DIRECTORIES}
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -230,7 +230,7 @@ if(CLEAR_MEMORY)
 endif(CLEAR_MEMORY)
 
 add_feature_info("Shared library" BUILD_SHARED_LIBS
-    "creating ${PROJECT_NAME} as a shared library (.so/.dll)")
+    "creating libssh2 as a shared library (.so/.dll)")
 
 option(ENABLE_ZLIB_COMPRESSION "Use zlib for compression")
 add_feature_info(Compression ENABLE_ZLIB_COMPRESSION
@@ -238,24 +238,24 @@ add_feature_info(Compression ENABLE_ZLIB_COMPRESSION
 if(ENABLE_ZLIB_COMPRESSION)
   find_package(ZLIB REQUIRED)
 
-  target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+  target_include_directories(libssh2 PRIVATE ${ZLIB_INCLUDE_DIRS})
   list(APPEND LIBRARIES ${ZLIB_LIBRARIES})
   list(APPEND PC_REQUIRES_PRIVATE zlib)
   if(ZLIB_FOUND)
-      target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2_HAVE_ZLIB=1)
+      target_compile_definitions(libssh2 PRIVATE LIBSSH2_HAVE_ZLIB=1)
   endif()
 endif()
 
 option(ENABLE_CRYPT_NONE "Permit \"none\" cipher -- NOT RECOMMENDED")
 add_feature_info("\"none\" cipher" ENABLE_CRYPT_NONE "")
 if(ENABLE_CRYPT_NONE)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2_CRYPT_NONE=1)
+    target_compile_definitions(libssh2 PRIVATE LIBSSH2_CRYPT_NONE=1)
 endif()
 
 option(ENABLE_MAC_NONE "Permit \"none\" MAC -- NOT RECOMMMENDED")
 add_feature_info("\"none\" MAC" ENABLE_MAC_NONE "")
 if(ENABLE_MAC_NONE)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2_MAC_NONE=1)
+    target_compile_definitions(libssh2 PRIVATE LIBSSH2_MAC_NONE=1)
 endif()
 
 option(ENABLE_GEX_NEW
@@ -263,7 +263,7 @@ option(ENABLE_GEX_NEW
 add_feature_info("diffie-hellman-group-exchange-sha1" ENABLE_GEX_NEW
   "\"new\" diffie-hellman-group-exchange-sha1 method")
 if(ENABLE_GEX_NEW)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2_DH_GEX_NEW=1)
+    target_compile_definitions(libssh2 PRIVATE LIBSSH2_DH_GEX_NEW=1)
 endif()
 
 # Enable debugging logging by default if the user configured a debug build
@@ -277,7 +277,7 @@ option(ENABLE_DEBUG_LOGGING "log execution with debug trace"
 add_feature_info(Logging ENABLE_DEBUG_LOGGING
    "Logging of execution with debug trace")
 if(ENABLE_DEBUG_LOGGING)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2DEBUG)
+    target_compile_definitions(libssh2 PRIVATE LIBSSH2DEBUG)
 endif()
 
 ## Platform checks
@@ -344,22 +344,22 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/libssh2_config_cmake.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/libssh2_config.h)
 # to find generated header
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(libssh2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 # Check for the OS.
 # Daniel's note: this should not be necessary and we need to work to
 # get this removed.
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2_WIN32)
+    target_compile_definitions(libssh2 PRIVATE LIBSSH2_WIN32)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LIBSSH2_DARWIN)
+    target_compile_definitions(libssh2 PRIVATE LIBSSH2_DARWIN)
 endif()
 
 if(CMAKE_VERSION VERSION_LESS "2.8.12")
   # Fall back to over-linking dependencies
-  target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+  target_link_libraries(libssh2 ${LIBRARIES})
 else()
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBRARIES})
+    target_link_libraries(libssh2 PRIVATE ${LIBRARIES})
 endif()
 
 ## Installation
@@ -370,7 +370,7 @@ install(FILES
     ${PROJECT_SOURCE_DIR}/include/libssh2_sftp.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS libssh2
   EXPORT Libssh2Config
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -388,11 +388,11 @@ set(RUNTIME_DEPENDENCIES ${_RUNTIME_DEPENDENCIES} CACHE INTERNAL
 ## During package installation, install Libssh2Config.cmake
 install(EXPORT Libssh2Config
   NAMESPACE Libssh2::
-  DESTINATION lib/cmake/${PROJECT_NAME})
+  DESTINATION lib/cmake/libssh2)
 
 ## During build, register directly from build tree
 # create Libssh2Config.cmake
-export(TARGETS ${PROJECT_NAME} NAMESPACE Libssh2:: FILE Libssh2Config.cmake)
+export(TARGETS libssh2 NAMESPACE Libssh2:: FILE Libssh2Config.cmake)
 export(PACKAGE Libssh2) # register it
 
 ## Export a .pc file for client projects not using CMake
@@ -409,7 +409,7 @@ install(
 
 ## Versioning
 
-#set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 1 VERSION 1.0.1)
+#set_target_properties(libssh2 PROPERTIES SOVERSION 1 VERSION 1.0.1)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
@@ -418,5 +418,5 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion)
 install(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/Libssh2ConfigVersion.cmake
-  DESTINATION lib/cmake/${PROJECT_NAME})
+  DESTINATION lib/cmake/libssh2)
 
