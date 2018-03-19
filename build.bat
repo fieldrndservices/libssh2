@@ -8,7 +8,4 @@ cmake -G"Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OF
 popd
 cmake --build build32 --config Release
 cmake --build build64 --config Release
-pushd build64 & pushd src & pushd Release
-if exist "labssh2-x64.dll" del "labssh2-x64.dll"
-ren labssh2.dll labssh2-x64.dll
-popd & popd & popd
+

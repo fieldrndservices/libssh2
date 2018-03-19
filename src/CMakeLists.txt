@@ -211,9 +211,14 @@ if(WIN32)
     list(APPEND SOURCES ${PROJECT_SOURCE_DIR}/win32/libssh2.rc)
 endif()
 
+if("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+    set(OUTPUT_NAME labssh2-x64)
+else()
+    set(OUTPUT_NAME labssh2)
+endif()
+
 add_library(libssh2 ${SOURCES})
-# we want it to be called libssh2 on all platforms
-set_target_properties(libssh2 PROPERTIES PREFIX "" OUTPUT_NAME labssh2)
+set_target_properties(libssh2 PROPERTIES PREFIX "" OUTPUT_NAME ${OUTPUT_NAME})
 
 target_compile_definitions(libssh2 PRIVATE ${PRIVATE_COMPILE_DEFINITIONS})
 target_include_directories(libssh2
