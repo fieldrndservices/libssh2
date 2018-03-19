@@ -69,31 +69,46 @@ The `nmake install` command will "install" the static libraries into `C:\Program
 
 ### Windows
 
-The [Microsoft Visual C++ Build Tools 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017) should have installed the `x86 Native Build Tools` and the `x64 Native Build Tools` command prompts. Use the x86 command prompt for building the 32-bit versions of the DLL, and the x64 command prompt for building the 64-bit version of the DLL. This ensures the appropriate C compiler is available to CMake to build the library. Run the following commands to obtain the source code:
+The [Microsoft Visual C++ Build Tools 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017) should have installed the `x86 Native Build Tools` and the `x64 Native Build Tools` command prompts. Use the x86 command prompt for building the 32-bit versions of the DLL, and the x64 command prompt for building the 64-bit or 32-bit version of the DLL. The x86 command prompt can only be used to build the 32-bit DLL, whereas the x64 command prompt can be used to build either or both of the 64-bit or 32-bit DLLs. This ensures the appropriate C compiler is available to CMake to build the library. Run the following commands to obtain the source code:
 
 ```dos
 > git clone https://github.com/fieldrndservices/labssh2-c.git LabSSH2-C
 > cd LabSSH2-C
 ```
 
-Then, run the following commands based on building a 32-bit or 64-bit version of the DLL. #### 32-bit
+#### Automatic
+
+Ensure a 32-bit and 64-bit version of the static libraries for OpenSSL have been installed to `C:\Program Files (x86)\OpenSSL` and `C:\Program Files\OpenSSL` before proceeding with the automatic build. Note, these are the default install locations. Both the 32-bit and 64-bit DLLs can be build by starting the x64 command prompt and running the `build.bat` batch file as follows:
 
 ```dos
+> build.bat
+```
+
+Ignore any warnings and the DLLs will be available in the `build32\src\Release` and `build64\src\Release` directories, respectively.
+
+#### Manual 32-bit
+
+```dos
+> mkdir build
+> cd build
 > cmake -G"Visual Studio 15 2017" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
 > cmake --build . --config Release
 ```
 
-#### 64-bit
+Ignore any warnings, and the 32-bit DLL will be available in the `build\src\Relase` folder.
+
+#### Manual 64-bit
 
 ```dos
+> mkdir build
+> cd build
 > cmake -G"Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_TESTING=OFF -DCRYPTO_BACKEND=OpenSSL -DOPENSSL_ROOT_DIR="C:\Program Files (x86)\OpenSSL" ..
 > cmake --build . --config Release
-> cd src
-> cd Release
-> ren labssh2.ddl labssh2-x64.dll
 ```
 
-The `-DBUILD_TESTING=OFF` skips building the tests, which need the older libeay and ssleay shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building. The DLL will be available in the `build\src\Release` folder.
+Ignore any warnings, and the 64-bit DLL will be available in the `build\src\Relase` folder.
+
+The `-DBUILD_TESTING=OFF` skips building the tests, which need the older libeay and ssleay shared/dynamic libraries. The shared library will still be built, but using the `-DBUILD_TESTING=OFF` eliminates a bunch of link errors during building. The `-DBUILD_DOCS` option has been added by this fork/project and disables installing the documentation if the libraries are "installed".If the OpenSSL library was installed in a different location, other than the defaults, then the path value for the `-DOPENSSL_ROOT_DIR` option needs to be changed to match the different install location.
 
 ### macOS
 
